@@ -2,27 +2,37 @@
   <div class="row">
     <div class="col-3 pl-2">
       <div class="form-row py-2">
-        <input type="text" class="form-control col-6" placeholder="Buscar">
-        <select class="form-control col-6 pl-2">
+        <igx-input-group class="px-2">
+          <input igxInput type="text" placeholder="Buscar" (input)="filter($event.target.value)">
+        </igx-input-group>
+        <!-- <input type="text" class="form-control col-6" placeholder="Buscar"> -->
+        <select class="form-control col-6">
           <option selected>PENDIENTE</option>
           <option>APROBADO</option>
         </select>
+        <a (click)="form.open()"><span>A</span></a>
       </div>
-      <div class="row">
-        <igx-grid #grid1 [data]="localData" [paging]="true" [perPage]="10" height="663px"
-          (onSelection)="cellSelection($event)" [allowFiltering]="true">
+      <div class="row" (window:click)="disableContextMenu()">
+        <igx-grid #grid1 [data]="localDataPrueba" (onContextMenu)="rightClick($event)" [paging]="true" [perPage]="10"
+          height="663px" (onSelection)="cellSelection($event)" [allowFiltering]="true">
 
-          <igx-column field="estado" header="Estado" [width]="'190px'" [filterable]="false">
+          <igx-column field="status" header="Estado" [width]="'190px'" [filterable]="false">
             <ng-template igxCell let-val>
+              {{ val | uppercase }}
             </ng-template>
           </igx-column>
 
-          <igx-column field="tarea" header="Tarea" [width]="'100px'" [filterable]="false">
+          <igx-column field="name" header="Tarea" [width]="'100px'" [filterable]="false">
             <ng-template igxCell let-val>
+              {{ val | uppercase }}
             </ng-template>
           </igx-column>
         </igx-grid>
-
+        <div *ngIf="contextmenu==true">
+          <contextmenu [x]="contextmenuX" [y]="contextmenuY" [cell]="clickedCell" [selectedCells]="multiCellArgs"
+            (onCellValueCopy)="copy($event)">
+          </contextmenu>
+        </div>
       </div>
     </div>
     <div class="col-9 px-3">
@@ -75,7 +85,6 @@
         <div class="col-4 pl-2">
           <igx-grid #grid1 [data]="localData" [paging]="true" [perPage]="10" height="658px"
             (onSelection)="cellSelection($event)" [allowFiltering]="true">
-
             <igx-column field="estado" header="Comentario" [width]="'190px'" [filterable]="false">
               <ng-template igxCell let-val>
               </ng-template>
@@ -85,4 +94,30 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="dialog-sample">
+  <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onLeftButtonSelect)="form.close()"
+    (onRightButtonSelect)="signIn($event)" rightButtonLabel="Sign In" closeOnOutsideSelect="true">
+    <form class="signInForm">
+      <igx-input-group>
+        <label igxLabel for="username">Nombre</label>
+        <input igxInput id="username" type="text" />
+      </igx-input-group>
+      <igx-input-group>
+        <label igxLabel>Track ID</label>
+        <input igxInput id="password" type="password" />
+      </igx-input-group>
+      <igx-combo #combo class="combo" (onOpened)="activeSelect()" [itemsMaxHeight]="255" [data]="lData"
+        [displayKey]="'login'" [valueKey]="'_id'" placeholder="Ingrese el recurso" searchPlaceholder="Buscar">
+      </igx-combo>
+      <igx-input-group>
+        <label igxLabel>Duración (min)</label>
+        <input igxInput id="password" type="text" />
+      </igx-input-group>
+      <igx-combo #combo class="combo" (onOpened)="activeSelect2()" [itemsMaxHeight]="255" [data]="lData2"
+      [displayKey]="'name'" [valueKey]="'_id'" placeholder="Formularios" searchPlaceholder="Buscar">
+    </igx-combo>
+    </form>
+  </igx-dialog>
 </div>

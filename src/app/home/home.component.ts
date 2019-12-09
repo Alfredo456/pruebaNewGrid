@@ -12,6 +12,7 @@ import {
   IgxStringFilteringOperand,
   IgxSummaryResult
 } from "igniteui-angular";
+import { ProcessService } from './process.service';
 //import { athletesData } from "./../services/data";
 //import { DataService } from "./../services/data.service";
 
@@ -25,13 +26,25 @@ export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild("grid1", { read: IgxGridComponent, static: true })
   public grid1: IgxGridComponent;
 
-  public topSpeedSummary = CustomTopSpeedSummary;
-  public bnpSummary = CustomBPMSummary;
   public localData: any[];
+  public localDataPrueba: any[];
   public isFinished = false;
   private _live = true;
   private _timer;
   private windowWidth: any;
+  public lData: any[];
+  public lData2: any[];
+
+  public contextmenu = false;
+  public contextmenuX = 0;
+  public contextmenuY = 0;
+  public clickedCell = null;
+  public copiedData;
+  public multiCellSelection: { data: any[] } = { data: [] };
+  public multiCellArgs;
+  cell: any;
+  onCellValueCopy: any;
+  selectedCells: any;
 
   get live() {
     return this._live;
@@ -53,10 +66,38 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.windowWidth && this.windowWidth < 860;
   }
 
-  constructor(private zone: NgZone) { }
+  constructor(private zone: NgZone, private processService: ProcessService) { }
 
   public ngOnInit() {
+    this.processService.getTask().subscribe(x => {
+      console.log('alfredo x', x);
+      this.localDataPrueba = x.data;
+    });
     const athletes = [];
+    // this.localDataPrueba = [{
+    //   estado: 'APROBADO',
+    //   tarea: 'M1'
+    // },
+    // {
+    //   estado: 'RECHAZADO',
+    //   tarea: 'M2'
+    // }, {
+    //   estado: 'APROBADO',
+    //   tarea: 'M3'
+    // },
+    // {
+    //   estado: 'RECHAZADO',
+    //   tarea: 'M4'
+    // }, {
+    //   estado: 'NEXT',
+    //   tarea: 'M5'
+    // }, {
+    //   estado: 'APROBADO',
+    //   tarea: 'M6'
+    // }, {
+    //   estado: 'APROBADO',
+    //   tarea: 'M7'
+    // }];
 
     for (const athlete of athletes) {
       this.getSpeed(athlete);
@@ -134,8 +175,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public filter(term) {
-    this.grid1.filter("CountryName", term, IgxStringFilteringOperand.instance().condition("contains"));
-    // this.grid1.markForCheck();
+    this.grid1.filter("tarea", term, IgxStringFilteringOperand.instance().condition("contains"));
+    this.grid1.markForCheck();
   }
 
   private ticker() {
@@ -196,49 +237,87 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.isFinished = true;
     }
   }
-}
 
-class CustomTopSpeedSummary extends IgxNumberSummaryOperand {
-
-  constructor() {
-    super();
+  public rightClick(eventArgs: any) {
+    eventArgs.event.preventDefault();
+    this.multiCellArgs = {};
+    if (this.multiCellSelection) {
+      const node = eventArgs.cell.selectionNode;
+      const isCellWithinRange = this.grid1.getSelectedRanges().some((range) => {
+        if (node.column >= range.columnStart &&
+          node.column <= range.columnEnd &&
+          node.row >= range.rowStart &&
+          node.row <= range.rowEnd) {
+          return true;
+        }
+        return false;
+      });
+      if (isCellWithinRange) {
+        this.multiCellArgs = { data: this.multiCellSelection.data };
+      }
+    }
+    this.contextmenuX = eventArgs.event.clientX;
+    this.contextmenuY = eventArgs.event.clientY;
+    this.clickedCell = eventArgs.cell;
+    this.contextmenu = true;
   }
 
-  public operate(data?: any[]): IgxSummaryResult[] {
-    const result = [];
-    result.push({
-      key: "average",
-      label: "average",
-      summaryResult: data.length ? IgxNumberSummaryOperand.average(data).toFixed(2) : null
+  public copySelectedCellData(event) {
+    const selectedData = { [this.cell.column.field]: this.cell.value };
+    this.copyData(JSON.stringify({ [this.cell.column.field]: this.cell.value }));
+    this.onCellValueCopy.emit({ data: selectedData });
+  }
+  public copy(event) {
+    this.copiedData = JSON.stringify(event.data, null, 2);
+    if (this.multiCellSelection) {
+      this.multiCellSelection = undefined;
+      this.multiCellArgs = undefined;
+      this.grid1.clearCellSelection();
+    }
+  }
+
+  public copyRowData(event) {
+    const selectedData = this.cell.row.rowData;
+    this.copyData(JSON.stringify(this.cell.row.rowData));
+    this.onCellValueCopy.emit({ data: selectedData });
+  }
+  copyData(arg0: string) {
+    throw new Error("Method not implemented.");
+  }
+
+  public disableContextMenu() {
+    if (this.contextmenu) {
+      this.multiCellSelection = undefined;
+      this.multiCellArgs = undefined;
+      this.contextmenu = false;
+    }
+  }
+
+  public copySelectedCells(event) {
+    const selectedData = this.selectedCells.data;
+    this.copyData(JSON.stringify(selectedData));
+    this.onCellValueCopy.emit({ data: selectedData });
+  }
+
+  public onDialogOKSelected(event) {
+    event.dialog.close();
+  }
+
+  public signIn(event) {
+    event.dialog.close();
+  }
+
+  public activeSelect() {
+    this.processService.getResourceinstances().subscribe(x => {
+      console.log('alfredo x getResourceinstances', x);
+      this.lData = x.data;
     });
-
-    return result;
   }
-}
-
-export class CustomBPMSummary extends IgxNumberSummaryOperand {
-
-  constructor() {
-    super();
-  }
-
-  public operate(data?: any[]): IgxSummaryResult[] {
-    const result = [];
-    result.push(
-      {
-        key: "min",
-        label: "min",
-        summaryResult: IgxNumberSummaryOperand.min(data)
-      }, {
-      key: "max",
-      label: "max",
-      summaryResult: IgxNumberSummaryOperand.max(data)
-    }, {
-      key: "average",
-      label: "average",
-      summaryResult: data.length ? IgxNumberSummaryOperand.average(data).toFixed(2) : null
+  
+  public activeSelect2() {
+    this.processService.getForms().subscribe(x => {
+      console.log('alfredo x getResourceinstances', x);
+      this.lData2 = x.data;
     });
-
-    return result;
   }
 }
