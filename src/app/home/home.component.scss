@@ -1,68 +1,127 @@
-@import '~igniteui-angular/lib/core/styles/themes/utilities';
+@import '~igniteui-angular/lib/core/styles/themes/index';
 
-%content-display {
-    width: 100%;
-    display: flex;
-    text-align: center;
-    flex-flow: column nowrap;
-    justify-content: stretch;
-    align-items: center;
-    padding: 40px 24px 40px 24px;
-    overflow: inherit;
+$grid-sample-theme: igx-grid-theme($row-selected-background: #333,
+  $row-selected-text-color: #ddd,
+  $row-hover-background: #f8f8f8,
+  $row-border-color: #f8f8f8,
+  $cell-selected-background: igx-color($default-palette, grays, 800),
+  $cell-selected-text-color: #fff);
+
+$progressBar-sample-theme: igx-progress-linear-theme($track-color: rgba(181, 181, 181, .5), $fill-color-default: orange);
+
+::ng-deep .default-theme {
+  .grid__wrapper {
+    @include igx-grid($grid-sample-theme);
+    @include igx-progress-linear($progressBar-sample-theme);
+  }
 }
 
-@include b(content) {
-    @extend %content-display;
-
-    p {
-        margin: 0px 0px 8px 0px;
-
-        &:nth-last-child(2) {
-            padding-top: 16px;
-        }
+:host {
+  ::ng-deep {
+    .igx-paginator>* {
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
     }
+  }
+}
 
-    @include e(header) {
-        color: igx-color($default-palette, 'primary');
-    }
+.grid__wrapper {
+  width: 1000px;
+  margin: 0 auto;
+}
 
-    @include e(subject) {
-        margin-bottom: 16px;
-    }
+@media (max-width: 1000px) {
+  .grid__wrapper {
+    width: 98% !important;
+    margin: 0 auto;
+    padding-left: 1%;
+    padding-right: 1%;
+  }
+}
 
-    @include e(container, $m: wide) {
-        display: flex;
-        flex-flow: row;
-        justify-content: center;
-    }
+@media (max-width: 720px) {
+  .grid__wrapper {
+    width: 720px !important;
+    margin: 0 3px;
+    padding-right: 5px;
+  }
+}
 
-    @include e(link, $m: github) {
-        position: relative;
-        display: flex;
-        flex-flow: row;
-        align-items: center;
+.sample-column {
+  margin: 0 !important;
+}
 
-        &:not(:first-child) {
-            margin-left: 24px;
-        } 
+.switch-sample__title {
+  margin: 0 rem(20px) 0 0;
+}
 
+.sample__header {
+  display: flex;
+  align-self: flex-start;
+  justify-content: space-between;
+  width: 100%;
+  margin-bottom: rem(20px);
+}
 
-        &::before {
-            position: relative;
-            display: block;
-            content: '';
-            min-width: 24px;
-            min-height: 24px;
-            background-image: url('../../assets/GitHub/github.svg');
-            background-size: 24px 24px;
-            background-repeat: no-repeat;
-            margin-right: 8px;
-        }
-    }
-    
-    @include e(image) {
-        margin-bottom: 48px;
-        max-height: 480px;
-        max-width: 100%;
-    }
+.switch-sample {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  width: 100%;
+  height: rem(50px);
+}
+
+.switch-sample__label {
+  margin: 0 rem(8) 0 0;
+}
+
+.athlete_name {
+  width: rem(100px);
+  margin: 0 rem(30px);
+}
+
+.athlete_name,
+.title {
+  @include ellipsis();
+}
+
+.badge_wrap,
+.cell__inner,
+.cell__inner_2 {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.cell__inner,
+.badge_wrap {
+  position: relative;
+  justify-content: space-between;
+}
+
+.gridSample__filter {
+  width: rem(200px);
+}
+
+.flag {
+  width: rem(24px);
+}
+
+.cup {
+  padding-left: 20px;
+}
+
+.rowIndex {
+  margin-left: rem(57px);
+}
+
+@media (max-width: rem(960px)) {
+  .grid__wrapper {
+    width: rem(960px);
+  }
+}
+
+.linear-bar-container {
+  width: 100%;
 }
