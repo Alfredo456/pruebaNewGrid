@@ -135,14 +135,14 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public filter(term) {
     this.grid1.filter("CountryName", term, IgxStringFilteringOperand.instance().condition("contains"));
-    this.grid1.markForCheck();
+    // this.grid1.markForCheck();
   }
 
   private ticker() {
-    this.zone.runOutsideAngular(() => {
-      this.updateData();
-      this.zone.run(() => this.grid1.markForCheck());
-    });
+    // this.zone.runOutsideAngular(() => {
+    //   this.updateData();
+    //   this.zone.run(() => this.grid1.markForCheck());
+    // });
   }
 
   private generateRandomNumber(min, max) {

@@ -16,9 +16,20 @@ $app-palette: igx-palette($primary, $secondary);
 @include igx-theme($app-palette);
 
 
-html, body {
+html,
+body {
   height: 100%;
 }
+
 .content p {
   margin: 15px;
+}
+
+* {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.igx-grid__th-title {
+  text-align: center;
 }

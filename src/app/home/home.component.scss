@@ -125,3 +125,15 @@ $progressBar-sample-theme: igx-progress-linear-theme($track-color: rgba(181, 181
 .linear-bar-container {
   width: 100%;
 }
+
+button {
+  width: 150px;
+}
+
+* {
+  text-align: center;
+}
+
+.igx-grid__th-title {
+  text-align: center;
+}
