@@ -13,6 +13,7 @@ import {
   IgxSummaryResult
 } from "igniteui-angular";
 import { ProcessService } from './process.service';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 //import { athletesData } from "./../services/data";
 //import { DataService } from "./../services/data.service";
 
@@ -23,8 +24,8 @@ import { ProcessService } from './process.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  @ViewChild("grid1", { read: IgxGridComponent, static: true })
-  public grid1: IgxGridComponent;
+  @ViewChild('grid1', null) grid1: IgxGridComponent;
+  @ViewChild('form', null) modal: any;
 
   public localData: any[];
   public localDataPrueba: any[];
@@ -42,6 +43,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   public copiedData;
   public multiCellSelection: { data: any[] } = { data: [] };
   public multiCellArgs;
+  public formNew: FormGroup;
   cell: any;
   onCellValueCopy: any;
   selectedCells: any;
@@ -66,11 +68,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     return this.windowWidth && this.windowWidth < 860;
   }
 
-  constructor(private zone: NgZone, private processService: ProcessService) { }
+  constructor(private zone: NgZone, private processService: ProcessService, private _fb: FormBuilder) { }
 
   public ngOnInit() {
     this.processService.getTask().subscribe(x => {
-      console.log('alfredo x', x);
       this.localDataPrueba = x.data;
     });
     const athletes = [];
@@ -124,7 +125,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   public cellSelection(evt) {
     const cell = evt.cell;
-    this.grid1.selectRows([cell.row.rowID], true);
+    if (this.grid1) {
+      this.grid1.selectRows([cell.row.rowID], true);
+    }
   }
 
   public getIconType(cell) {
@@ -175,7 +178,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public filter(term) {
-    this.grid1.filter("tarea", term, IgxStringFilteringOperand.instance().condition("contains"));
+    this.grid1.filter("name", term, IgxStringFilteringOperand.instance().condition("contains"));
     this.grid1.markForCheck();
   }
 
@@ -231,7 +234,6 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
     }
-    console.log('alfredo this.localData', this.localData);
     if (this.localData && this.localData.length > 0 && this.localData[0].TrackProgress >= 100) {
       this.live = false;
       this.isFinished = true;
@@ -304,20 +306,76 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   public signIn(event) {
-    event.dialog.close();
+    console.log(this.formNew);
+    //event.dialog.close();
+    if (this.formNew.valid) {
+      let payload = {
+        finish_time: '',
+        id_company: '',
+        location: {
+          lng: 0,
+          lat: 0
+        },
+        status: '',
+        type: '',
+        id_resourceInstance: '',
+        name: '',
+        trackingId: '',
+        forms: [],
+        duration: '',
+        address: ''
+      };
+      Object.assign(payload, this.formNew.value);
+      payload.finish_time = '2019-12-02 14:56:00';
+      payload.id_company = '56f55709efe9e8d575768a54';
+      payload.location = { lng: -74.06102, lat: 4.68024 };
+      payload.status = 'PENDIENTE';
+      payload.type = 'stop';
+      payload.id_resourceInstance = this.formNew.get('id_resourceInstance').value[0];
+      payload.forms = [];
+      this.formNew.get('forms').value.forEach(element => {
+        payload.forms.push({
+          id_form: element,
+          maxAnswers: 1
+        });
+      });
+      console.log(payload);
+      this.processService.setTask(payload).subscribe(x => {
+        event.dialog.close();
+        this.processService.getTask().subscribe(x => {
+          this.localDataPrueba = x.data;
+        });
+      });
+    }
   }
 
   public activeSelect() {
     this.processService.getResourceinstances().subscribe(x => {
-      console.log('alfredo x getResourceinstances', x);
       this.lData = x.data;
     });
   }
-  
+
   public activeSelect2() {
     this.processService.getForms().subscribe(x => {
-      console.log('alfredo x getResourceinstances', x);
       this.lData2 = x.data;
     });
+  }
+
+  private generateform() {
+    this.formNew = this._fb.group(
+      {
+        name: [null, Validators.required],
+        id_resourceInstance: [null, Validators.required],
+        trackingId: [null, Validators.required],
+        forms: [null, Validators.required],
+        duration: [null, Validators.required],
+        address: ['Cra 47A #91-91, Bogotá, Colombia.', Validators.required],
+      }
+    );
+  }
+
+  public initModal() {
+    this.modal.open();
+    this.generateform();
   }
 }

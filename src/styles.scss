@@ -20,10 +20,14 @@ html,
 body {
   height: 100%;
 }
-
-.content p {
-  margin: 15px;
+.igx-dialog__window {
+  min-width: 30rem !important;
+  min-height: 30rem !important;
+  padding: 3rem !important;
 }
+// .content p {
+//   margin: 15px;
+// }
 
 * {
   padding: 0 !important;

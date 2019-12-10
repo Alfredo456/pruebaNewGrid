@@ -20,7 +20,6 @@ export class ProcessService {
     }
 
     public getTask(): Observable<any> {
-        console.log('alfredo a ver ');
         return this._http
             .get(this.baseURL.concat(this.GET_TASKS), this.options({
                 _dc: 1575905178153,
@@ -41,7 +40,6 @@ export class ProcessService {
 
 
     public getResourceinstances(): Observable<any> {
-        console.log('alfredo a ver ');
         return this._http
             .get(this.baseURL.concat(this.GET_RESOURCE_INSTANCES), this.options({
                 _dc: 1575915459799,
@@ -59,7 +57,6 @@ export class ProcessService {
     }
 
     public getForms(): Observable<any> {
-        console.log('alfredo a ver ');
         return this._http
             .get(this.baseURL.concat(this.GET_FORMS), this.options({
                 _dc: 1575917232880,
@@ -69,6 +66,16 @@ export class ProcessService {
                 limit: 25,
                 sort: [{ "property": "_id", "direction": "DESC" }]
             }))
+            .pipe(
+                catchError(err => {
+                    return throwError(err.error);
+                })
+            );
+    }
+
+    public setTask(payload): Observable<any> {
+        return this._http
+            .post(this.baseURL.concat(this.GET_TASKS), payload, this.options({}))
             .pipe(
                 catchError(err => {
                     return throwError(err.error);

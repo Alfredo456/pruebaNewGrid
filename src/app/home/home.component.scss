@@ -130,9 +130,9 @@ button {
   width: 150px;
 }
 
-* {
-  text-align: center;
-}
+//* {
+//  text-align: center;
+//}
 
 .igx-grid__th-title {
   text-align: center;
@@ -145,14 +145,14 @@ button {
   padding: 0 16px;
 }
 
-.dialog-sample {
-  min-width: 300px;
-}
+// .dialog-sample {
+//   min-width: 300px;
+// }
 
-.signInForm {
-  padding: 12px 24px 24px;
+// .signInForm {
+//   padding: 12px 24px 24px;
 
-  igx-input-group+igx-input-group {
-    margin-top: 24px;
-  }
-}
+//   igx-input-group+igx-input-group {
+//     margin-top: 24px;
+//   }
+// }

@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HomeComponent } from './home/home.component';
 import { IgxGridModule, IgxAvatarModule, IgxBadgeModule, IgxButtonModule, IgxIconModule, IgxInputGroupModule, IgxProgressBarModule, IgxRippleModule, IgxSwitchModule, IgxDialogModule, IgxComboModule } from 'igniteui-angular';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from "@angular/common/http";
 import { ContextmenuComponent } from './home/contextmenu/contextmenu.component';
 
@@ -23,6 +23,7 @@ import { ContextmenuComponent } from './home/contextmenu/contextmenu.component';
     IgxGridModule.forRoot(),
 
     FormsModule,
+    ReactiveFormsModule,
     IgxAvatarModule,
     IgxBadgeModule,
     IgxButtonModule,

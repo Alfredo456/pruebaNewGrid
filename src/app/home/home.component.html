@@ -6,28 +6,30 @@
           <input igxInput type="text" placeholder="Buscar" (input)="filter($event.target.value)">
         </igx-input-group>
         <!-- <input type="text" class="form-control col-6" placeholder="Buscar"> -->
-        <select class="form-control col-6">
+        <!-- <select class="form-control col-6">
           <option selected>PENDIENTE</option>
           <option>APROBADO</option>
-        </select>
-        <a (click)="form.open()"><span>A</span></a>
+        </select> -->
+        <a (click)="initModal()"><span>AGREGAR</span></a>
       </div>
       <div class="row" (window:click)="disableContextMenu()">
-        <igx-grid #grid1 [data]="localDataPrueba" (onContextMenu)="rightClick($event)" [paging]="true" [perPage]="10"
-          height="663px" (onSelection)="cellSelection($event)" [allowFiltering]="true">
-
-          <igx-column field="status" header="Estado" [width]="'190px'" [filterable]="false">
-            <ng-template igxCell let-val>
-              {{ val | uppercase }}
-            </ng-template>
-          </igx-column>
-
-          <igx-column field="name" header="Tarea" [width]="'100px'" [filterable]="false">
-            <ng-template igxCell let-val>
-              {{ val | uppercase }}
-            </ng-template>
-          </igx-column>
-        </igx-grid>
+        <div class="grid_wrapper">
+            <igx-grid #grid1 [data]="localDataPrueba" (onContextMenu)="rightClick($event)" [paging]="true" [perPage]="10"
+              height="663px" (onSelection)="cellSelection($event)" [allowFiltering]="true">
+    
+              <igx-column [resizable]="true" field="status" header="Estado" [width]="'190px'" [filterable]="false">
+                <ng-template igxCell let-val>
+                  {{ val | uppercase }}
+                </ng-template>
+              </igx-column>
+    
+              <igx-column [resizable]="true" field="name" header="Tarea" [width]="'100px'" [filterable]="false">
+                <ng-template igxCell let-val>
+                  {{ val | uppercase }}
+                </ng-template>
+              </igx-column>
+            </igx-grid>
+        </div>
         <div *ngIf="contextmenu==true">
           <contextmenu [x]="contextmenuX" [y]="contextmenuY" [cell]="clickedCell" [selectedCells]="multiCellArgs"
             (onCellValueCopy)="copy($event)">
@@ -96,28 +98,32 @@
   </div>
 </div>
 
+
 <div class="dialog-sample">
   <igx-dialog #form title="Sign In" leftButtonLabel="Cancel" (onLeftButtonSelect)="form.close()"
     (onRightButtonSelect)="signIn($event)" rightButtonLabel="Sign In" closeOnOutsideSelect="true">
-    <form class="signInForm">
-      <igx-input-group>
-        <label igxLabel for="username">Nombre</label>
-        <input igxInput id="username" type="text" />
-      </igx-input-group>
-      <igx-input-group>
-        <label igxLabel>Track ID</label>
-        <input igxInput id="password" type="password" />
-      </igx-input-group>
-      <igx-combo #combo class="combo" (onOpened)="activeSelect()" [itemsMaxHeight]="255" [data]="lData"
-        [displayKey]="'login'" [valueKey]="'_id'" placeholder="Ingrese el recurso" searchPlaceholder="Buscar">
-      </igx-combo>
-      <igx-input-group>
-        <label igxLabel>Duración (min)</label>
-        <input igxInput id="password" type="text" />
-      </igx-input-group>
-      <igx-combo #combo class="combo" (onOpened)="activeSelect2()" [itemsMaxHeight]="255" [data]="lData2"
-      [displayKey]="'name'" [valueKey]="'_id'" placeholder="Formularios" searchPlaceholder="Buscar">
-    </igx-combo>
-    </form>
+    <ng-template [ngIf]="formNew">
+      <form class="signInForm" [formGroup]="formNew">
+        <igx-input-group>
+          <label igxLabel for="username">Nombre</label>
+          <input igxInput id="username" formControlName="name" type="text" />
+        </igx-input-group>
+        <igx-input-group>
+          <label igxLabel>Track ID</label>
+          <input igxInput formControlName="trackingId" type="text" />
+        </igx-input-group>
+        <igx-combo #combo class="combo" formControlName="id_resourceInstance" (onOpened)="activeSelect()"
+          [itemsMaxHeight]="255" [data]="lData" [displayKey]="'login'" [valueKey]="'_id'"
+          placeholder="Ingrese el recurso" searchPlaceholder="Buscar">
+        </igx-combo>
+        <igx-input-group>
+          <label igxLabel>Duración (min)</label>
+          <input igxInput formControlName="duration" type="text" />
+        </igx-input-group>
+        <igx-combo #combo formControlName="forms" class="combo" (onOpened)="activeSelect2()" [itemsMaxHeight]="255"
+          [data]="lData2" [displayKey]="'name'" [valueKey]="'_id'" placeholder="Formularios" searchPlaceholder="Buscar">
+        </igx-combo>
+      </form>
+    </ng-template>
   </igx-dialog>
 </div>
