@@ -10,25 +10,43 @@
           <option selected>PENDIENTE</option>
           <option>APROBADO</option>
         </select> -->
+        <igx-combo #comboPruebaNueva class="combo" [itemsMaxHeight]="255"
+          [data]="lDataPruebaNueva | paginate: paginateAlfredo" [displayKey]="'name'" [valueKey]="'_id'"
+          placeholder="Prueba" searchPlaceholder="Buscar">
+          <ng-template igxComboFooter>
+            <!-- <div class="footer-class">Infragistics 2018</div> -->
+            <pagination-controls [id]="paginateAlfredo.id" maxSize="4" previousLabel="Ant." nextLabel="Sig."
+              (pageChange)="changePage($event)"></pagination-controls>
+          </ng-template>
+        </igx-combo>
+        <igx-select>
+          <igx-select-item *ngFor="let item of lDataPruebaNueva | paginate: paginateAlfredo">
+            {{item.name}}
+          </igx-select-item>
+          <ng-template igxSelectFooter>
+            <pagination-controls [id]="paginateAlfredo.id" maxSize="4" previousLabel="Ant." nextLabel="Sig."
+              (pageChange)="changePage($event)"></pagination-controls>
+          </ng-template>
+        </igx-select>
         <a (click)="initModal()"><span>AGREGAR</span></a>
       </div>
       <div class="row" (window:click)="disableContextMenu()">
         <div class="grid_wrapper">
-            <igx-grid #grid1 [data]="localDataPrueba" (onContextMenu)="rightClick($event)" [paging]="true" [perPage]="10"
-              height="663px" (onSelection)="cellSelection($event)" [allowFiltering]="true">
-    
-              <igx-column [resizable]="true" field="status" header="Estado" [width]="'190px'" [filterable]="false">
-                <ng-template igxCell let-val>
-                  {{ val | uppercase }}
-                </ng-template>
-              </igx-column>
-    
-              <igx-column [resizable]="true" field="name" header="Tarea" [width]="'100px'" [filterable]="false">
-                <ng-template igxCell let-val>
-                  {{ val | uppercase }}
-                </ng-template>
-              </igx-column>
-            </igx-grid>
+          <igx-grid #grid1 [data]="localDataPrueba" (onContextMenu)="rightClick($event)" [paging]="true" [perPage]="10"
+            height="663px" (onSelection)="cellSelection($event)" [allowFiltering]="true">
+
+            <igx-column [resizable]="true" field="status" header="Estado" [width]="'190px'" [filterable]="false">
+              <ng-template igxCell let-val>
+                {{ val | uppercase }}
+              </ng-template>
+            </igx-column>
+
+            <igx-column [resizable]="true" field="name" header="Tarea" [width]="'100px'" [filterable]="false">
+              <ng-template igxCell let-val>
+                {{ val | uppercase }}
+              </ng-template>
+            </igx-column>
+          </igx-grid>
         </div>
         <div *ngIf="contextmenu==true">
           <contextmenu [x]="contextmenuX" [y]="contextmenuY" [cell]="clickedCell" [selectedCells]="multiCellArgs"

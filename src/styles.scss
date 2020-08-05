@@ -10,21 +10,38 @@ $secondary: #ce5712 !default;
 
 $app-palette: igx-palette($primary, $secondary);
 
+
 /* autoprefixer grid: on */
 
 @include igx-core();
 @include igx-theme($app-palette);
 
 
+$fv-standard-black: #34495E;
+$fv-standard-white: #ffffff;
+$fv-standard-cream: #fbfbfb;
+$fv-standard-gray: #e5e5e5;
+$fv-standard-blue: rgb(31, 186, 214);
+// fonts
+$fv-standard-font-size: 12px;
+$fv-medium-font-size: 13px;
+$fv-large-font-size: 15px;
+$fv-standard-font-weigth: bold;
+$fv-standard-font-family: 'Open Sans',
+sans-serif;
+
+
 html,
 body {
   height: 100%;
 }
+
 .igx-dialog__window {
   min-width: 30rem !important;
   min-height: 30rem !important;
   padding: 3rem !important;
 }
+
 // .content p {
 //   margin: 15px;
 // }
@@ -159,4 +176,89 @@ $green-palette: igx-palette($primary: #09f, $secondary: #72da67, $surface: #333)
   .grid-chart-contextmenu-wrapper {
     @include igx-fluent-dark-theme($fluent-excel-palette);
   }
+}
+
+pagination-controls {
+  min-width: max-content;
+
+  ul.ngx-pagination {
+    margin: 0;
+  }
+}
+
+.mini-pagination {
+  position: absolute;
+  bottom: 7%;
+  // font-size: 10px;
+  right: 1.6%;
+
+  i.fas.fa-redo-alt {
+    font-size: 1.6vmax;
+    cursor: pointer;
+  }
+
+  button {
+    height: calc(1.75rem + 2px);
+  }
+
+  ul.ngx-pagination {
+    padding: 0;
+    margin-right: .8rem;
+  }
+}
+
+.comments-pagination {
+  position: absolute;
+  bottom: 7%;
+  font-size: 10px !important;
+
+  span {
+    font-size: 10px !important;
+  }
+
+  i.fas.fa-redo-alt {
+    font-size: 1.6vmax;
+    cursor: pointer;
+  }
+
+  button {
+    height: calc(1.75rem + 2px);
+  }
+
+  ul.ngx-pagination {
+    padding: 0;
+    margin-right: .8rem;
+  }
+}
+
+.pagination {
+  position: absolute;
+  bottom: 7%;
+  font-size: 16px !important;
+  right: 1.6%;
+
+  i.fas.fa-redo-alt {
+    font-size: 1.6vmax;
+    cursor: pointer;
+  }
+
+  button {
+    height: calc(1.75rem + 2px);
+  }
+
+  ul.ngx-pagination {
+    padding: 0;
+    margin-right: .8rem;
+  }
+}
+
+.select-pagination {
+  ul.ngx-pagination {
+    padding: 0;
+    font-size: 10px;
+  }
+}
+
+.ngx-pagination .current {
+  background: $fv-standard-blue !important;
 }

@@ -43,7 +43,14 @@ export class HomeComponent implements OnInit, OnDestroy {
   public copiedData;
   public multiCellSelection: { data: any[] } = { data: [] };
   public multiCellArgs;
+  public paginateAlfredo = {
+    currentPage: 1,
+    itemsPerPage: 1,
+    totalItems: 3,
+    id: 'hola'
+  }
   public formNew: FormGroup;
+  public lDataPruebaNueva = [{ name: 'prueba1', _id: '1' }, { name: 'prueba2', _id: '2' }, { name: 'prueba3', _id: '3' }];
   cell: any;
   onCellValueCopy: any;
   selectedCells: any;
@@ -377,5 +384,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   public initModal() {
     this.modal.open();
     this.generateform();
+  }
+
+  public changePage(event) {
+    console.log('alfredo evento', event);
+    this.paginateAlfredo.currentPage = event;
   }
 }
